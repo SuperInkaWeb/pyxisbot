@@ -1,24 +1,42 @@
 'use strict';
 /**
- * Correos del sistema (por ahora: invitaciones) enviados con Resend (https://resend.com), sin librerías.
- * Variables:
- *   RESEND_API_KEY  clave de API de Resend (obligatoria para enviar).
- *   RESEND_FROM     remitente, p. ej. "Pyxis-Bot Robotics <invitaciones@tudominio.com>" (dominio verificado en Resend).
- *                   Sin dominio verificado se usa onboarding@resend.dev, que SOLO entrega al dueño de la cuenta de Resend.
- * Sin RESEND_API_KEY no se envía nada y la invitación igual queda creada.
+ * Correos del sistema (por ahora: invitaciones). Elige el proveedor según las variables de entorno:
+ *
+ *  1. Resend con dominio propio  RESEND_API_KEY + RESEND_FROM ("Pyxis-Bot Robotics <invitaciones@tudominio.com>")
+ *  2. Gmail                      GMAIL_USER + GMAIL_APP_PASSWORD (contraseña de aplicación de Google).
+ *                                Sirve sin dominio propio; límite de Google: unos 500 correos al día.
+ *  3. Resend sin dominio         solo RESEND_API_KEY: remitente onboarding@resend.dev, que SOLO entrega
+ *                                al dueño de la cuenta de Resend (útil para pruebas).
+ *
+ * Sin ninguno no se envía nada y la invitación igual queda creada.
  */
-const KEY = process.env.RESEND_API_KEY || '';
-const FROM = process.env.RESEND_FROM || 'Pyxis-Bot Robotics <onboarding@resend.dev>';
-const enviar = globalThis.__correoPrueba || (async (m) => {    // las pruebas inyectan un envío falso
+const RESEND_KEY = process.env.RESEND_API_KEY || '';
+const RESEND_FROM = process.env.RESEND_FROM || '';
+const GMAIL_USER = process.env.GMAIL_USER || '';
+const GMAIL_PASS = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s/g, '');
+
+const proveedor = RESEND_KEY && RESEND_FROM ? 'resend'
+  : GMAIL_USER && GMAIL_PASS ? 'gmail'
+  : RESEND_KEY ? 'resend-pruebas'
+  : null;
+
+let gmail = null;   // transporte SMTP de Gmail, se crea en el primer envío
+
+async function enviar(m) {
+  if (globalThis.__correoPrueba) return globalThis.__correoPrueba(m);   // las pruebas inyectan un envío falso
+  if (proveedor === 'gmail') {
+    gmail = gmail || require('nodemailer').createTransport({ service: 'gmail', auth: { user: GMAIL_USER, pass: GMAIL_PASS } });
+    return gmail.sendMail({ from: `"Pyxis-Bot Robotics" <${GMAIL_USER}>`, to: m.to, subject: m.subject, html: m.html, text: m.text });
+  }
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify(m),
+    headers: { Authorization: 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...m, from: RESEND_FROM || 'Pyxis-Bot Robotics <onboarding@resend.dev>' }),
   });
   if (!r.ok) throw new Error('Resend HTTP ' + r.status + ': ' + (await r.text()).slice(0, 200));
-});
+}
 
-const configurado = () => Boolean(globalThis.__correoPrueba || KEY);
+const configurado = () => Boolean(globalThis.__correoPrueba || proveedor);
 const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const ROLES = {
@@ -74,7 +92,7 @@ async function enviarInvitacion(datos) {
   if (!configurado()) return false;
   try {
     const m = invitacion(datos);
-    await enviar({ from: FROM, to: [datos.para], subject: m.asunto, html: m.html, text: m.texto });
+    await enviar({ to: [datos.para], subject: m.asunto, html: m.html, text: m.texto });
     return true;
   } catch (e) {
     console.error('[correo]', e.message);
@@ -82,4 +100,4 @@ async function enviarInvitacion(datos) {
   }
 }
 
-module.exports = { enviarInvitacion, invitacion, configurado };
+module.exports = { enviarInvitacion, invitacion, configurado, proveedor };
