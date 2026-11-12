@@ -13,7 +13,7 @@ const S = require('../backend/safety');
 const C = require('../backend/control');
 const db = require('../backend/db');
 
-const HIST_MAX = 3600;     // 1 hora a 1 lectura por segundo
+const HIST_MAX = 3600;     // máximo de lecturas que se envían al panel por consulta 
 const ESTADOS = ['NORMAL', 'RTH', 'ESPERA'];
 
 function limpiarLectura(b) {
