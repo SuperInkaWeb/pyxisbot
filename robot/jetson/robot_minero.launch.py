@@ -8,7 +8,7 @@ Arranca todo lo que necesita el dashboard en la Jetson:
 
 El LiDAR Oradar MS200 se lanza aparte con el launch de su driver (debe publicar /scan).
 
-Uso:  ros2 launch ~/robot-minero/jetson/robot_minero.launch.py
+Uso:  ros2 launch ~/pyxisbot/robot/jetson/robot_minero.launch.py
 """
 import os
 
