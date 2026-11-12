@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel de control · Pyxis-Bot Robotics</title>
+<meta name="description" content="Panel de control del robot minero Pyxis-Bot: gases, LiDAR, térmica, conducción y brazo.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2d3329">
+<script src="/assets/tema.js?v=2026110903"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/dashboard.css?v=2026110903">
+</head>
+<body>
+
+<nav class="barra-usuario" aria-label="Cuenta">
+  <a href="/" aria-label="Ir al sitio de Pyxis-Bot Robotics">◂ Pyxis-Bot Robotics</a>
+  <div class="barra-der">
+  <button type="button" class="tema-btn" data-tema-toggle aria-pressed="false" aria-label="Cambiar a modo oscuro" title="Modo oscuro"><svg class="i-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg><svg class="i-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+  <div class="u-der" id="usuario" hidden>
+    <select id="selRobot" class="peq-in" aria-label="Robot" hidden></select>
+    <span id="uNombre"></span><span class="chip-rol" id="uRol"></span><span class="chip-rol solo" id="soloLectura" hidden>Solo lectura</span>
+    <button type="button" class="btn-sec" id="btnSalir">Cerrar sesión</button>
+  </div>
+  </div>
+</nav>
+<div class="bn-demo" id="bannerDemo" hidden role="note"><span><b>Modo demostración:</b> todos los datos son simulados. Prueba los escenarios al final de la tarjeta Ambiente y energía.</span><a href="/api/auth?login&amp;signup">Crear mi cuenta</a></div>
+<header id="cabecera">
+  <a class="marca" href="/" aria-label="Pyxis-Bot, ir al sitio"><svg class="logo-pyx" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M20 20 L33 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="20" r="4" fill="currentColor"/></svg><span>Pyxis-Bot<small>Panel de operación</small></span></a>
+  <div class="modo">
+    <div class="selector" role="group" aria-label="Cambiar modo de operación">
+      <button class="m" id="btnManual" aria-pressed="true">MANUAL</button>
+      <button class="a" id="btnAuto" aria-pressed="false">AUTOMÁTICO</button>
+    </div>
+    <div class="estado" id="estadoModo" aria-live="polite">Modo actual: MANUAL</div>
+  </div>
+  <div class="grupo-estado"><div class="conexion"><span class="punto" id="punto"></span><span id="textoConexion">Simulación (sin ROS)</span></div>
+  <div class="bateria" id="bateria" role="img" aria-label="Nivel de batería"><div class="bat-barra"><i id="batRelleno"></i></div><span id="batTxt">-- %</span></div></div>
+  <button class="parada" id="btnParada">PARADA DE EMERGENCIA</button>
+</header>
+<div class="banner" id="banner" role="alert" hidden></div>
+<div class="banner aviso" id="banner2" role="status" hidden></div>
+<div class="banner estop" id="bannerEstop" role="alert" hidden><span><b>PARADA DE EMERGENCIA ACTIVA.</b> El robot no acepta órdenes de movimiento.<span id="estopQuien"></span></span><button type="button" class="btn-sec" id="btnLiberar" hidden>Liberar parada</button></div>
+
+<main id="app">
+  <div class="col">
+    <section>
+      <h2>Cámaras y sensores de visión</h2>
+      <div class="camaras" id="camaras">
+        <div class="cam principal" data-id="visual" tabindex="0" role="button" aria-label="Cámara de visualización">
+          <canvas></canvas><img alt=""><span class="nombre">Cámara de visualización</span><span class="sin">Sin señal</span>
+        </div>
+        <div class="cam" data-id="flir" tabindex="0" role="button" aria-label="Cámara térmica FLIR">
+          <canvas></canvas><img alt=""><span class="nombre">FLIR térmica</span><span class="sin">Sin señal</span>
+        </div>
+        <div class="cam" data-id="lidar" tabindex="0" role="button" aria-label="LiDAR Oradar MS200">
+          <canvas></canvas><span class="nombre">LiDAR Oradar MS200</span><span class="sin">Sin señal</span>
+        </div>
+      </div>
+      <p style="color:var(--apagado);margin:10px 0 0;font-size:13px">Haz clic en una vista pequeña para ponerla en grande.</p>
+    </section>
+
+  </div>
+
+  <div class="col" id="controles">
+    <section class="centro" aria-label="Centro de mando">
+      <div class="pestanas" role="tablist" aria-label="Elegir panel de control">
+        <button type="button" role="tab" id="tabCarro" data-panel="pCarro" aria-controls="pCarro" aria-selected="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="18" height="7" rx="2"/><circle cx="7.5" cy="17.5" r="2"/><circle cx="16.5" cy="17.5" r="2"/><path d="M7 9l2-4h6l2 4"/></svg>
+          <span>Conducción</span></button>
+        <button type="button" role="tab" id="tabBrazo" data-panel="pBrazo" aria-controls="pBrazo" aria-selected="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h7"/><path d="M7 20V14l6-6"/><circle cx="7" cy="14" r="1.6"/><circle cx="13" cy="8" r="1.6"/><path d="M13 8l5 1"/><path d="M18 6.5l2.5 2.5M18 11.5l2.5-2.5"/></svg>
+          <span>Brazo y pinza</span></button>
+        <button type="button" role="tab" id="tabAmbiente" data-panel="pAmbiente" aria-controls="pAmbiente" aria-selected="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l5-6 4 4 4-7 5 9"/><path d="M3 21h18"/></svg>
+          <span>Ambiente y energía</span></button>
+      </div>
+      <p class="aviso-centro" id="avisoCentro" hidden>Modo automático: el robot conduce solo. Aquí ves en vivo el ambiente y la energía; cambia a <b>MANUAL</b> para conducir o mover el brazo.</p>
+
+      <div class="panel-c" id="pCarro" role="tabpanel" aria-labelledby="tabCarro">
+        <section>
+          <h2>Comando de manejo</h2>
+          <p class="aviso-auto">El robot está en modo automático. Cambia a manual para conducir.</p>
+          <fieldset id="fsMando">
+            <div class="mando" id="mando">
+              <button data-d="adelante" aria-label="Adelante">▲</button>
+              <button data-d="izquierda" aria-label="Girar a la izquierda">◄</button>
+              <button class="c" data-d="alto">ALTO</button>
+              <button data-d="derecha" aria-label="Girar a la derecha">►</button>
+              <button data-d="atras" aria-label="Atrás">▼</button>
+            </div>
+            <label class="rango">Velocidad máxima: <b id="velTxt">0.30</b> m/s
+              <input type="range" id="vel" min="0.05" max="0.6" step="0.05" value="0.3">
+            </label>
+          </fieldset>
+          <div class="comando"><span>Lineal <b id="cmdLin">0.00</b> m/s</span><span>Angular <b id="cmdAng">0.00</b> rad/s</span></div>
+          <p style="color:var(--apagado);margin:8px 0 0;font-size:13px">Teclado: flechas o W A S D · Espacio = alto · Joystick: stick izquierdo</p>
+        </section>
+      </div>
+
+      <div class="panel-c" id="pBrazo" role="tabpanel" aria-labelledby="tabBrazo" hidden>
+        <section>
+          <h2>Brazo robótico</h2>
+          <p class="aviso-auto">El robot está en modo automático. Cambia a manual para mover el brazo.</p>
+          <div class="brazo-vistas">
+            <svg id="brazoLado" viewBox="0 0 240 170" role="img" aria-label="Vista lateral del brazo"></svg>
+            <svg id="brazoTop" viewBox="0 0 100 100" role="img" aria-label="Vista superior, giro de la base"></svg>
+          </div>
+          <fieldset id="fsBrazo">
+            <div id="articulaciones"></div>
+            <div class="brazo-btn">
+              <button id="btnHome">Posición inicial</button>
+              <button id="btnPlegar">Plegar para transporte</button>
+            </div>
+          </fieldset>
+        </section>
+        <section>
+          <h2>Pinza</h2>
+          <fieldset id="fsPinza">
+            <label class="rango" style="margin-top:0">Apertura: <b id="pinzaTxt">50</b> %
+              <input type="range" id="pinza" min="0" max="100" step="1" value="50">
+            </label>
+            <div class="pinza">
+              <button id="btnAbrir">Abrir</button>
+              <button id="btnCerrar">Cerrar</button>
+            </div>
+          </fieldset>
+          <div class="pinza-info"><span>Posición real <b id="pinzaPos">50</b> %</span></div>
+        </section>
+      </div>
+
+      <div class="panel-c" id="pAmbiente" role="tabpanel" aria-labelledby="tabAmbiente" hidden>
+        <section id="ambiente">
+          <h2>Ambiente y energía</h2>
+          <div class="filtros">
+            <div class="grp"><span id="lblVentana">Ventana</span>
+              <div class="seg" role="group" aria-labelledby="lblVentana" id="segVentana">
+                <button type="button" data-r="60" aria-pressed="false">1 min</button>
+                <button type="button" data-r="600" aria-pressed="true">10 min</button>
+                <button type="button" data-r="3600" aria-pressed="false">1 h</button>
+              </div></div>
+            <div class="grp"><span id="lblUni">Temperatura</span>
+              <div class="seg" role="group" aria-labelledby="lblUni" id="segUni">
+                <button type="button" data-u="C" aria-pressed="true">°C</button>
+                <button type="button" data-u="F" aria-pressed="false">°F</button>
+              </div></div>
+            <button type="button" class="btn-sec" id="btnCsv">Descargar datos (CSV)</button>
+          </div>
+
+          <div class="w-grupo">Gases</div><div class="w-grid" id="wGases"></div>
+          <div class="w-grupo">Clima</div><div class="w-grid" id="wClima"></div>
+          <div class="w-grupo">Energía</div><div class="w-grid" id="wEnergia"></div>
+
+          <div class="detalle" id="detalle">
+            <div class="d-cab">
+              <div><h3 id="dTitulo">--</h3><p class="d-sub" id="dUmbrales"></p></div>
+              <div class="d-der">
+                <div class="d-val"><b id="dVal">--</b><small id="dUni"></small></div>
+                <span class="badge" id="dBadge"><i></i><span></span></span>
+                <button type="button" class="btn-sec" id="btnEscala" aria-pressed="false" title="Acerca la escala vertical a los valores medidos">Ajustar escala</button>
+                <button type="button" class="btn-sec" id="btnTabla" aria-pressed="false">Ver tabla</button>
+              </div>
+            </div>
+            <div class="grafico" id="grafico" tabindex="0" role="group" aria-label="Historial del sensor. Usa las flechas izquierda y derecha para leer cada valor.">
+              <svg id="gsvg" aria-hidden="true"></svg>
+              <div class="tip" id="tip" hidden><span class="fila"><span class="llave"></span><b></b></span><span class="sec"></span></div>
+            </div>
+            <div class="tabla-v" id="tablaV" hidden></div>
+            <div class="d-stats"><span>Mín <b id="sMin">--</b></span><span>Promedio <b id="sAvg">--</b></span><span>Máx <b id="sMax">--</b></span><span id="sVent"></span></div>
+          </div>
+
+          <div class="w-grupo">Navegación</div>
+          <div class="sensores" id="sensores"></div>
+
+          <div class="demo" id="demoBarra" hidden>
+            <span>Modo demo, provocar una situación:</span>
+            <button type="button" class="btn-sec" data-demo="normal">Todo normal</button>
+            <button type="button" class="btn-sec" data-demo="co">CO alto</button>
+            <button type="button" class="btn-sec" data-demo="ch4">Metano alto</button>
+            <button type="button" class="btn-sec" data-demo="o2">Oxígeno bajo</button>
+            <button type="button" class="btn-sec" data-demo="h2s">H₂S alto</button>
+            <button type="button" class="btn-sec" data-demo="calor">Calor</button>
+            <button type="button" class="btn-sec" data-demo="bat">Batería baja</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="eventos">
+      <h2>Eventos y alertas</h2>
+      <ol class="eventos" id="listaEventos"></ol>
+      <p class="vacio" id="eventosVacio">Sin alertas recientes. En modo demo no se guarda historial de alertas.</p>
+    </section>
+  </div>
+</main>
+
+<section class="admin" id="admin" hidden aria-label="Administración">
+  <h2>Administración</h2>
+  <div class="admin-g">
+    <div><h3>Robots de la empresa</h3><div class="tabla-w"><table id="tRobots"></table></div>
+      <form id="fRobot" class="u-der"><input class="peq-in" name="nombre" placeholder="Nombre del robot" maxlength="60" required aria-label="Nombre del robot"> <button class="btn-sec peq">Registrar robot</button></form>
+      <p id="claveNueva" class="msg ok" hidden></p></div>
+    <div><h3>Usuarios y permisos</h3><div class="tabla-w"><table id="tUsuarios"></table></div>
+      <form id="fInvitar" class="u-der"><input class="peq-in" name="email" type="email" placeholder="correo@empresa.com" required aria-label="Correo a invitar"> <select name="role" aria-label="Rol"><option value="operator">Operador</option><option value="observer">Observador</option><option value="admin">Administrador</option></select> <button class="btn-sec peq">Invitar</button></form></div>
+    <div id="bLeads" hidden><h3>Solicitudes de demo recibidas</h3><div class="tabla-w"><table id="tLeads"></table></div></div>
+    <div><h3>Registro de actividad</h3><ol id="lAudit"></ol></div>
+  </div>
+</section>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="/assets/dashboard.js?v=2026110903" defer></script>
+</body>
+</html>

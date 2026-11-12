@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pyxis-Bot · Inteligencia robótica para la exploración subterránea crítica</title>
+<meta name="description" content="Pyxis-Bot: robot de inspección para minería subterránea y espacios confinados. Monitorea CO, CH₄, O₂ y H₂S en tiempo real, mapea con LiDAR 360° y se comanda desde un panel web con parada de emergencia a un clic.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#232a22">
+<script src="/assets/tema.js?v=2026110903"></script>
+<link rel="canonical" href="https://robotmineropyxis-bot-dashboard.vercel.app/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta property="og:type" content="website"><meta property="og:locale" content="es_CO"><meta property="og:site_name" content="Pyxis-Bot Robotics">
+<meta property="og:title" content="Pyxis-Bot · Inteligencia robótica para la exploración subterránea crítica">
+<meta property="og:description" content="Diseñado para operar donde el ser humano no debe arriesgarse: gases en tiempo real, LiDAR 360° y control web con parada de emergencia a un clic.">
+<meta property="og:url" content="https://robotmineropyxis-bot-dashboard.vercel.app/"><meta property="og:image" content="https://robotmineropyxis-bot-dashboard.vercel.app/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Pyxis-Bot Robotics · Robot minero"><meta name="twitter:description" content="Gases, LiDAR y control remoto desde un panel web.">
+<meta name="twitter:image" content="https://robotmineropyxis-bot-dashboard.vercel.app/assets/img/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600&family=Barlow+Condensed:wght@600;700&display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=2026110903">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://robotmineropyxis-bot-dashboard.vercel.app/#org", "name": "Pyxis-Bot Robotics", "url": "https://robotmineropyxis-bot-dashboard.vercel.app/", "logo": "https://robotmineropyxis-bot-dashboard.vercel.app/favicon.svg", "areaServed": "CO"}, {"@type": "WebSite", "@id": "https://robotmineropyxis-bot-dashboard.vercel.app/#web", "url": "https://robotmineropyxis-bot-dashboard.vercel.app/", "name": "Pyxis-Bot Robotics", "inLanguage": "es-CO", "publisher": {"@id": "https://robotmineropyxis-bot-dashboard.vercel.app/#org"}}, {"@type": "Product", "name": "Pyxis-Bot · robot de inspección minera", "description": "Robot móvil de inspección con sensores de CO, CH4, O2 y H2S, LiDAR, cámara térmica y panel web de control remoto. Prototipo en desarrollo.", "brand": {"@type": "Brand", "name": "Pyxis-Bot Robotics"}, "category": "Robótica industrial"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Pyxis-Bot ya es un producto comercial certificado?", "acceptedAnswer": {"@type": "Answer", "text": "No. Pyxis-Bot es un prototipo en desarrollo. Antes de operar en atmósferas potencialmente explosivas se requiere el diseño y la certificación de equipos para áreas clasificadas (por ejemplo ATEX/IECEx o la normativa aplicable en tu país) y una evaluación de riesgos del sitio. Hoy ofrecemos demostraciones del sistema de control y acompañamiento para pruebas piloto."}}, {"@type": "Question", "name": "¿Qué gases mide el robot?", "acceptedAnswer": {"@type": "Answer", "text": "Monóxido de carbono (CO), metano (CH₄), oxígeno (O₂) y sulfuro de hidrógeno (H₂S), además de temperatura, humedad y presión. El panel avisa en dos niveles (precaución y peligro) y bloquea el paso a modo automático si hay una condición de peligro."}}, {"@type": "Question", "name": "¿Cómo se controla el robot?", "acceptedAnswer": {"@type": "Answer", "text": "Desde el panel web: conducción manual con teclado o botones, brazo y pinza, y modo automático. La parada de emergencia está siempre visible y puede activarla cualquier usuario con sesión; solo un operador puede liberarla."}}, {"@type": "Question", "name": "¿Qué pasa si se pierde la conexión?", "acceptedAnswer": {"@type": "Answer", "text": "El sistema está diseñado para que el robot se detenga o regrese solo a la base cuando deja de recibir señal de la estación base durante unos segundos. En minas subterráneas la cobertura de red es el principal reto, por eso el diseño contempla comunicación local en la galería."}}, {"@type": "Question", "name": "¿Puedo probar el panel sin robot?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. La demostración abre el panel con datos simulados, sin registro. Para ver tus propios datos se crea una cuenta gratuita de observador."}}, {"@type": "Question", "name": "¿Para qué sectores sirve?", "acceptedAnswer": {"@type": "Answer", "text": "Minería subterránea y a cielo abierto, túneles y obras civiles, petróleo y gas, industria con espacios confinados, rescate y agroindustria (silos y bodegas). Lo común: entornos donde enviar primero una máquina reduce el riesgo para las personas."}}, {"@type": "Question", "name": "¿Cómo se protegen mis datos?", "acceptedAnswer": {"@type": "Answer", "text": "Las contraseñas se guardan con hash scrypt, las sesiones usan cookies HttpOnly firmadas, hay límites de intentos y registro de actividad. Tratamos los datos personales conforme a la Ley 1581 de 2012; consulta la política de privacidad."}}]}</script>
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<header class="cab">
+  <div class="contenedor">
+    <a class="logo" href="/" aria-label="Pyxis-Bot Robotics, inicio"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="#5d7a52" stroke-width="2.5"/><path d="M20 20 L33 12" stroke="#5d7a52" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="20" r="4" fill="#5d7a52"/></svg>Pyxis-Bot</a>
+    <button class="menu-b" id="menuB" aria-expanded="false" aria-controls="nav">Menú</button>
+    <nav class="nav" id="nav" aria-label="Principal">
+      <a href="#problema">Problema</a><a href="#como">Cómo funciona</a><a href="#sectores">Sectores</a><a href="#panel">Panel</a><a href="#faq">Preguntas</a>
+      <button type="button" class="tema-btn" data-tema-toggle aria-pressed="false" aria-label="Cambiar a modo oscuro" title="Modo oscuro"><svg class="i-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg><svg class="i-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+      <a class="btn sm sec" href="/login">Ingresar</a>
+      <a class="btn sm" href="#demo">Solicitar demo</a>
+    </nav>
+  </div>
+</header>
+<main id="contenido">
+<div class="heroe">
+  <canvas id="fondo" aria-hidden="true"></canvas>
+  <div class="contenedor">
+    <div>
+      <span class="etiqueta">Robótica para entornos extremos</span>
+      <h1>Envía primero al robot. <em>Después, a las personas.</em></h1>
+      <p class="lead lead-titulo"><strong>Pyxis-Bot: Inteligencia robótica para la exploración subterránea crítica.</strong></p>
+      <p class="lead">Diseñado para operar donde el ser humano no debe arriesgarse. Pyxis-Bot inspecciona galerías y espacios confinados extremos: monitorea atmósferas peligrosas en tiempo real, genera mapas de alta precisión con LiDAR 360° y se comanda íntegramente desde un panel web intuitivo. Con control total y parada de emergencia a un solo clic, transformamos la seguridad minera en una operación preventiva.</p>
+      <div class="cta-fila">
+        <a class="btn" href="/dashboard?demo=1">Probar el panel ahora</a>
+        <a class="btn sec" href="#demo">Solicitar una demostración</a>
+      </div>
+      <p style="margin-top:18px;font-size:14px;color:#9fae96">Prototipo en desarrollo · sin registro para la demo</p>
+    </div>
+    <aside class="vivo" aria-label="Ejemplo de lecturas simuladas">
+      <h2>Lecturas de ejemplo</h2>
+      <dl>
+        <div><dt>CO</dt><dd id="vCO">8<small>ppm</small></dd></div>
+        <div><dt>CH₄</dt><dd id="vCH4">0.3<small>%</small></dd></div>
+        <div><dt>O₂</dt><dd id="vO2">20.8<small>%</small></dd></div>
+        <div><dt>H₂S</dt><dd id="vH2S">1<small>ppm</small></dd></div>
+      </dl>
+    </aside>
+  </div>
+</div>
+
+<section id="problema">
+  <div class="contenedor">
+    <div class="intro"><span class="etiqueta">El problema</span><h2>Lo más peligroso de una galería es lo que no se ve</h2>
+    <p>El monóxido de carbono, el metano, el sulfuro de hidrógeno y la falta de oxígeno no tienen señales evidentes y pueden ser letales en minutos. Cada inspección humana en estos espacios es un riesgo que una máquina puede asumir primero.</p></div>
+    <div class="rejilla">
+      <article class="tarjeta"><div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4 3-4 3-8M10 14c0-4 3-4 3-8M16 14c0-4 3-4 3-8"/><path d="M3 19h18"/></svg></div><h3>Aire que no se ve</h3><p>CO, CH₄, O₂ y H₂S medidos en el sitio, con alerta en dos niveles antes de que alguien entre.</p></article>
+      <article class="tarjeta"><div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 12l6-4"/><circle cx="12" cy="12" r="1.5"/></svg></div><h3>Terreno desconocido</h3><p>Un LiDAR de 360° mapea la galería y muestra obstáculos y la ruta recorrida.</p></article>
+      <article class="tarjeta"><div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4 4 0 0117 18z"/></svg></div><h3>Decisiones sin datos</h3><p>Registro de lecturas y alertas consultable desde cualquier equipo autorizado, sin instalar nada.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="como" class="alt">
+  <div class="contenedor">
+    <div class="intro"><span class="etiqueta">Cómo funciona</span><h2>Ciclo operativo inteligente: del dato bruto al control absoluto</h2></div>
+    <ol class="pasos">
+      <li><b>Mide</b><span>Un microcontrolador ESP32 lee los sensores de gas, ambiente, batería y orientación, y maneja motores y brazo.</span></li>
+      <li><b>Procesa</b><span>Una Jetson Orin Nano con ROS 2 integra LiDAR y cámaras, y aplica las reglas de seguridad.</span></li>
+      <li><b>Transmite</b><span>Una pasarela envía la telemetría a la nube y recoge las órdenes del operador.</span></li>
+      <li><b>Supervisa</b><span>El panel web centraliza la telemetría en tiempo real, permitiendo conducir la plataforma, accionar el brazo robótico y asegurar el control operativo con máxima precisión.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="panel">
+  <div class="contenedor dos">
+    <div>
+      <span class="etiqueta">El panel</span><h2>Supervisión total desde cualquier navegador</h2>
+      <p>Telemetría y mando centralizados sin instalaciones complejas: interfaz web de alta respuesta optimizada para turnos críticos, con alertas visuales inmediatas y gestión de actuadores y sensores en tiempo real.</p>
+      <ul class="chips"><li>Gases y alertas</li><li>Mapa LiDAR</li><li>Térmica</li><li>Brazo y pinza</li><li>Batería y clima</li><li>Roles y registro</li></ul>
+      <div class="cta-fila"><a class="btn" href="/dashboard?demo=1">Abrir demostración</a><a class="btn sec" href="/login?modo=registro">Crear cuenta</a></div>
+    </div>
+    <figure class="captura"><img src="/assets/img/panel.jpg" width="1200" height="750" loading="lazy" alt="Captura del panel de control Pyxis-Bot con widgets de gases, LiDAR, brazo y batería"><figcaption>Panel de control en modo demostración (datos simulados).</figcaption></figure>
+  </div>
+</section>
+
+<section id="seguridad" class="osc">
+  <div class="contenedor">
+    <div class="intro"><span class="etiqueta">Seguridad primero</span><h2>Seguridad redundante: blindado para proteger la operación</h2></div>
+    <div class="rejilla">
+      <article class="tarjeta"><div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Parada de emergencia</h3><p>Cualquier usuario con sesión puede activarla; queda enclavada hasta que un operador la libera.</p></article>
+      <article class="tarjeta"><div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="16" height="9" rx="2"/><path d="M21 11v3"/><path d="M7 11v3"/></svg></div><h3>Retorno automático</h3><p>Sin señal de la estación base por unos segundos, el robot regresa solo a la base por la ruta recorrida.</p></article>
+      <article class="tarjeta"><div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4 3-4 3-8M10 14c0-4 3-4 3-8M16 14c0-4 3-4 3-8"/><path d="M3 19h18"/></svg></div><h3>Bloqueo por gases</h3><p>No se puede pasar a automático con una alerta de peligro activa.</p></article>
+      <article class="tarjeta"><div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4 4 0 0117 18z"/></svg></div><h3>Cuentas y roles</h3><p>Administrador, operador y observador. Contraseñas con scrypt, límites de intentos y bitácora.</p></article>
+    </div>
+    <p class="aviso-p" style="margin-top:28px;color:#5d4a14"><b>Transparencia:</b> Pyxis-Bot es un prototipo. No está certificado para atmósferas explosivas y no sustituye los detectores, procedimientos ni permisos de trabajo de tu operación. Los umbrales del panel son configurables y deben validarse con la normativa que aplique en tu país.</p>
+  </div>
+</section>
+
+<section id="sectores">
+  <div class="contenedor">
+    <div class="intro"><span class="etiqueta">Sectores</span><h2>Anticipar el riesgo con robótica: la inteligencia que entra primero para que el equipo vuelva seguro</h2></div>
+    <div class="rejilla">
+      <article class="tarjeta"><h3>Minería</h3><p>Inspección de galerías tras voladuras, verificación de aire antes del reingreso.</p></article>
+      <article class="tarjeta"><h3>Túneles y obras civiles</h3><p>Reconocimiento de frentes de excavación y espacios con ventilación limitada.</p></article>
+      <article class="tarjeta"><h3>Petróleo y gas</h3><p>Revisión de recintos y fosos donde pueden acumularse gases (requiere versión certificada).</p></article>
+      <article class="tarjeta"><h3>Industria y agroindustria</h3><p>Tanques, silos y bodegas: espacios confinados con riesgo de asfixia.</p></article>
+      <article class="tarjeta"><h3>Rescate</h3><p>Exploración previa de estructuras colapsadas para decidir cómo entrar.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="especificaciones" class="alt">
+  <div class="contenedor">
+    <div class="intro"><span class="etiqueta">Especificaciones de diseño</span><h2>Ingeniería de precisión: el corazón tecnológico de Pyxis-Bot</h2><p>Valores de diseño del prototipo, no resultados de campo.</p></div>
+    <table class="espec">
+      <tr><th>Cerebro</th><td>NVIDIA Jetson Orin Nano (ROS 2) + microcontrolador ESP32</td></tr>
+      <tr><th>Percepción</th><td>LiDAR 360° Oradar MS200, cámara visible y cámara térmica</td></tr>
+      <tr><th>Gases</th><td>CO, CH₄, O₂, H₂S · alertas en dos niveles</td></tr>
+      <tr><th>Ambiente</th><td>Temperatura, humedad, presión, inclinación y rumbo</td></tr>
+      <tr><th>Manipulación</th><td>Brazo de 3 articulaciones + pinza</td></tr>
+      <tr><th>Control</th><td>Panel web (nube o red local), manual / automático, parada de emergencia</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="contenedor" style="max-width:820px">
+    <div class="intro"><span class="etiqueta">Preguntas frecuentes</span><h2>Todo sobre Pyxis-Bot, sin secretos</h2></div>
+<details><summary>¿Pyxis-Bot ya es un producto comercial certificado?</summary><p>No. Pyxis-Bot es un prototipo en desarrollo. Antes de operar en atmósferas potencialmente explosivas se requiere el diseño y la certificación de equipos para áreas clasificadas (por ejemplo ATEX/IECEx o la normativa aplicable en tu país) y una evaluación de riesgos del sitio. Hoy ofrecemos demostraciones del sistema de control y acompañamiento para pruebas piloto.</p></details>
+<details><summary>¿Qué gases mide el robot?</summary><p>Monóxido de carbono (CO), metano (CH₄), oxígeno (O₂) y sulfuro de hidrógeno (H₂S), además de temperatura, humedad y presión. El panel avisa en dos niveles (precaución y peligro) y bloquea el paso a modo automático si hay una condición de peligro.</p></details>
+<details><summary>¿Cómo se controla el robot?</summary><p>Desde el panel web: conducción manual con teclado o botones, brazo y pinza, y modo automático. La parada de emergencia está siempre visible y puede activarla cualquier usuario con sesión; solo un operador puede liberarla.</p></details>
+<details><summary>¿Qué pasa si se pierde la conexión?</summary><p>El sistema está diseñado para que el robot se detenga o regrese solo a la base cuando deja de recibir señal de la estación base durante unos segundos. En minas subterráneas la cobertura de red es el principal reto, por eso el diseño contempla comunicación local en la galería.</p></details>
+<details><summary>¿Puedo probar el panel sin robot?</summary><p>Sí. La demostración abre el panel con datos simulados, sin registro. Para ver tus propios datos se crea una cuenta gratuita de observador.</p></details>
+<details><summary>¿Para qué sectores sirve?</summary><p>Minería subterránea y a cielo abierto, túneles y obras civiles, petróleo y gas, industria con espacios confinados, rescate y agroindustria (silos y bodegas). Lo común: entornos donde enviar primero una máquina reduce el riesgo para las personas.</p></details>
+<details><summary>¿Cómo se protegen mis datos?</summary><p>Las contraseñas se guardan con hash scrypt, las sesiones usan cookies HttpOnly firmadas, hay límites de intentos y registro de actividad. Tratamos los datos personales conforme a la Ley 1581 de 2012; consulta la política de privacidad.</p></details>
+  </div>
+</section>
+
+<section id="demo" class="alt">
+  <div class="contenedor dos">
+    <div>
+      <span class="etiqueta">Hablemos</span><h2>Solicita una demostración</h2>
+      <p>Cuéntanos tu operación y te mostramos el panel con tu caso. Respondemos por correo.</p>
+      <ul class="chips"><li>Sin costo</li><li>Sin compromiso</li><li>Datos tratados bajo la Ley 1581</li></ul>
+    </div>
+    <form class="form-caja" id="formLead" novalidate>
+      <div id="leadMsg" role="status" aria-live="polite" hidden></div>
+      <div class="fila2">
+        <label class="campo"><span>Nombre</span><input name="name" id="lNombre" autocomplete="name" required maxlength="60"></label>
+        <label class="campo"><span>Correo</span><input name="email" id="lCorreo" type="email" autocomplete="email" required maxlength="120"></label>
+      </div>
+      <div class="fila2">
+        <label class="campo"><span>Empresa</span><input name="company" id="lEmpresa" autocomplete="organization" maxlength="80"></label>
+        <label class="campo"><span>Sector</span><select name="sector" id="lSector"><option value="mineria">Minería</option><option value="tuneles">Túneles y obras</option><option value="petroleo-gas">Petróleo y gas</option><option value="industria">Industria</option><option value="rescate">Rescate</option><option value="agroindustria">Agroindustria</option><option value="otro">Otro</option></select></label>
+      </div>
+      <label class="campo"><span>¿Qué necesitas inspeccionar?</span><textarea name="message" id="lMensaje" maxlength="1000"></textarea></label>
+      <div class="trampa" aria-hidden="true"><label>No llenar<input name="website" id="lWeb" tabindex="-1" autocomplete="off"></label></div>
+      <label class="marcar"><input type="checkbox" id="lConsent"><span>Autorizo el tratamiento de mis datos para ser contactado, según la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+      <button class="btn" id="lEnviar" type="submit" style="width:100%">Enviar solicitud</button>
+    </form>
+  </div>
+</section>
+</main>
+<footer class="pie">
+  <div class="contenedor">
+    <div class="cols">
+      <div><a class="logo" href="/" style="color:#f4f1e6">Pyxis-Bot Robotics</a><p style="margin-top:10px">Robots de inspección para entornos donde las personas no deberían entrar primero.</p></div>
+      <div><h3>Producto</h3><ul><li><a href="/dashboard?demo=1">Demostración</a></li><li><a href="/login">Ingresar</a></li><li><a href="/guias/gases-peligrosos-mineria">Guía de gases</a></li></ul></div>
+      <div><h3>Legal</h3><ul><li><a href="/terminos">Términos de uso</a></li><li><a href="/privacidad">Privacidad</a></li></ul></div>
+    </div>
+    <small>© 2026 Pyxis-Bot Robotics. Prototipo en desarrollo. Las marcas y nombres son provisionales.</small>
+  </div>
+</footer>
+<script src="/assets/fondo.js" defer></script>
+<script src="/assets/landing.js" defer></script>
+</body>
+</html>

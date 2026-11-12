@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iniciar sesión o crear cuenta · Pyxis-Bot Robotics</title>
+<meta name="description" content="Accede al panel de control del robot minero Pyxis-Bot o crea tu cuenta de operador.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#232a22">
+<script src="/assets/tema.js?v=2026110903"></script>
+<link rel="canonical" href="https://robotmineropyxis-bot-dashboard.vercel.app/login">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600&family=Barlow+Condensed:wght@600;700&display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=2026110903">
+</head>
+<body>
+<a class="saltar" href="#form">Saltar al formulario</a>
+<div class="acceso">
+  <aside>
+    <canvas id="fondo" aria-hidden="true"></canvas>
+    <a class="logo" href="/" style="color:#f4f1e6"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="#a9c79a" stroke-width="2.5"/><path d="M20 20 L33 12" stroke="#a9c79a" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="20" r="4" fill="#a9c79a"/></svg>Pyxis-Bot</a>
+    <div>
+      <h1>Ve lo que el aire esconde <em>antes de entrar.</em></h1>
+      <ul>
+        <li>Gases, temperatura y batería en un solo panel</li>
+        <li>Mapa LiDAR y conducción remota</li>
+        <li>Parada de emergencia al alcance de cualquier usuario</li>
+        <li>Roles: administrador, operador y observador</li>
+      </ul>
+    </div>
+    <p style="margin:0;font-size:14px;color:#9fae96">¿Solo quieres mirar? <a href="/dashboard?demo=1" style="color:#cfd6c4">Abre la demostración sin cuenta</a>.</p>
+  </aside>
+  <main id="contenido">
+    <div class="tema-flot"><button type="button" class="tema-btn" data-tema-toggle aria-pressed="false" aria-label="Cambiar a modo oscuro" title="Modo oscuro"><svg class="i-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg><svg class="i-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button></div>
+    <div class="caja">
+      <div class="form-caja">
+        <div id="mensaje" role="alert" aria-live="assertive" hidden></div>
+        <div id="pasoEntrar">
+          <h2 style="margin-top:0">Accede al centro de control</h2>
+          <a class="btn" href="/api/auth?login" style="width:100%">Iniciar sesión</a>
+          <a class="btn sec" href="/api/auth?login&amp;signup" style="width:100%;margin-top:12px">Crear cuenta</a>
+          <p class="ayuda" style="margin-top:14px">Acceso seguro con Auth0. Si tu empresa te invitó, entra con ese mismo correo y verifícalo.</p>
+        </div>
+        <form id="pasoEmpresa" hidden novalidate>
+          <h2 style="margin-top:0">Registra tu empresa</h2>
+          <p class="ayuda">Hola <b id="quien"></b>. Tu cuenta aún no pertenece a ninguna empresa. Si te invitaron, verifica tu correo y <a href="/login" id="reintentar">vuelve a intentarlo</a>; si eres el primero de tu empresa, regístrala: quedarás como administrador.</p>
+          <label class="campo"><span>Nombre de la empresa</span><input id="empresa" autocomplete="organization" maxlength="80" required></label>
+          <label class="marcar"><input type="checkbox" id="terminos"><span>Acepto los <a href="/terminos" target="_blank" rel="noopener">términos de uso</a> y la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+          <button class="btn" type="submit" style="width:100%">Registrar empresa</button>
+          <button class="btn sec" type="button" id="salir" style="width:100%;margin-top:12px">Cerrar sesión</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/assets/fondo.js" defer></script>
+<script src="/assets/login.js?v=2026110903" defer></script>
+</body>
+</html>
