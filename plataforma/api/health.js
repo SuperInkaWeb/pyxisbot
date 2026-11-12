@@ -17,12 +17,14 @@ module.exports = H.endpoint(async (req, res) => {
     auth0: A.auth0Listo(),
     authSecret: A.secretoListo(),
     correo: correo.configurado(),
+    proveedorCorreo: correo.proveedor,
     problemas: [
       ...(!db.configurada() ? ['Falta DATABASE_URL: conecta Neon en Vercel → Storage (o Integrations) y vuelve a desplegar.'] : []),
       ...(dbOk === false ? ['Neon está configurado pero no responde. Revisa DATABASE_URL.'] : []),
       ...(!A.auth0Listo() ? ['Faltan AUTH0_DOMAIN, AUTH0_CLIENT_ID o AUTH0_CLIENT_SECRET.'] : []),
       ...(!A.secretoListo() ? ['Falta la variable AUTH_SECRET.'] : []),
-      ...(!correo.configurado() ? ['Falta RESEND_API_KEY: las invitaciones se crean pero no se envía el correo.'] : []),
+      ...(correo.proveedor === 'resend-pruebas' ? ['Resend sin dominio (falta RESEND_FROM): solo entrega al dueño de la cuenta de Resend. Configura Gmail o un dominio.'] : []),
+      ...(!correo.configurado() ? ['Falta configurar el correo (GMAIL_USER + GMAIL_APP_PASSWORD, o RESEND_API_KEY + RESEND_FROM): las invitaciones se crean pero no se envía el correo.'] : []),
     ],
     time: new Date().toISOString(),
   });
